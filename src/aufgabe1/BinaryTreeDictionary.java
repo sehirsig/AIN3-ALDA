@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
  * @param <K> Key.
  * @param <V> Value.
  */
-public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
+public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> { //Lets Go!
     
     static private class Node<K, V> {
         K key;
