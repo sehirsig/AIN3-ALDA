@@ -17,7 +17,35 @@ import java.util.NoSuchElementException;
  * @param <K> Key.
  * @param <V> Value.
  */
-public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> { //Lets Go!
+public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements Dictionary<K, V> {
+    private Comparator<? super K> cmp;
+
+
+
+    @Override
+    public V insert(K key, V value) {
+        return null;
+    }
+
+    @Override
+    public V search(K key) {
+        return null;
+    }
+
+    @Override
+    public V remove(K key) {
+        return null;
+    }
+
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public Iterator<Entry<K, V>> iterator() {
+        return null;
+    } //Lets Go!
     
     static private class Node<K, V> {
         K key;
