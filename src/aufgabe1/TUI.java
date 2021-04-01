@@ -8,8 +8,6 @@ public class TUI {
 
     private static Dictionary<String, String> dict;
 
-    private static long start;
-    private static long end;
     private static final long THOUSAND = 1000;
 
     public static void main(String[] args) throws Exception {
@@ -59,7 +57,10 @@ public class TUI {
                 break;
             case "benchmark":
             case "b":
-                benchmarks(args);
+                benchmarks();
+                break;
+            case "d":
+                deleteAll();
                 break;
             default:
                 System.err.println(errorMessage);
@@ -72,7 +73,27 @@ public class TUI {
         System.out.printf("Number of Words: %d\n", dict.size());
     }
 
+    private static void deleteAll() {
+        if (!checkDirExists()) { return; }
+        List<String> keys = new LinkedList<>();
+
+        for (Dictionary.Entry<String, String> words : dict) {
+            keys.add(words.getKey());
+        }
+
+        ListIterator<String> itK = keys.listIterator();
+        for (var word : keys) {
+            dict.remove(word);
+        }
+    }
+
     private static void create(String[] args) {
+        benchNumber = 0;
+        averageDeutsch = 0;
+        averageEnglisch = 0;
+        averageRead = 0;
+        benchNumberRead = 0;
+        previousamount = 0;
         if (args.length >= 2) {
             String arg = args[1].toLowerCase();
             if (arg.equals("hashdictionary") || arg.equals("hash") || arg.equals("h")){
@@ -88,6 +109,10 @@ public class TUI {
         dict = new SortedArrayDictionary<>();
         System.out.println("SortedArrayDictionary created!");
     }
+
+    private static long averageRead = 0;
+    private static long benchNumberRead = 0;
+    private static int previousamount = 0;
 
     private static void read(String[] args) throws Exception {
         if (!checkDirExists()) { return; }
@@ -120,6 +145,9 @@ public class TUI {
 
         FileReader in;
 
+        long gemessteZeit = 0;
+        long start;
+        long end;
 
         try {
             in = new FileReader(sFile);
@@ -129,23 +157,35 @@ public class TUI {
             System.out.printf("Gesteste Dictionary: %s\n-> Messung in Mikro Sekunden µs <-\n\n", dict.getClass().toString());
 
             if (args.length >= 2) {
-                start = System.nanoTime();
                 while((line = br.readLine()) != null && counter < number ) {
                     String[] currentLine = line.split(" ");
+                    start = System.nanoTime();
                     dict.insert(currentLine[0], currentLine[1]);
+                    end = System.nanoTime();
+                    gemessteZeit += (end - start) / THOUSAND;
                     counter++;
                 }
-                end = System.nanoTime();
-                System.out.printf("Dauer für %d Einträge : %d µs\n", dict.size(), (end-start)/THOUSAND);
             } else {
-                start = System.nanoTime();
                 while((line = br.readLine()) != null) {
                     String[] currentLine = line.split(" ");
+                    start = System.nanoTime();
                     dict.insert(currentLine[0], currentLine[1]);
+                    end = System.nanoTime();
+                    gemessteZeit += (end - start) / THOUSAND;
+                    counter++;
                 }
-                end = System.nanoTime();
-                System.out.printf("Dauer für %d Einträge : %d µs\n", dict.size(), (end-start)/THOUSAND);
             }
+            number = counter;
+            System.out.printf("Dauer für %d Einträge : %d µs\n", counter, gemessteZeit);
+
+            averageRead += gemessteZeit;
+            benchNumberRead += 1;
+            if (previousamount != number) {
+                averageRead = gemessteZeit;
+                benchNumberRead = 1;
+                previousamount = number;
+            }
+            System.out.printf("\nAverage from %d Runs with %d words: %d µs\n", benchNumberRead, previousamount, (averageRead/benchNumberRead));
             br.close();
 
         } catch (Exception e) {
@@ -162,7 +202,6 @@ public class TUI {
     private static void search(String[] args) {
         if (!checkDirExists()) { return; }
         if (args.length < 2) { System.err.println(errorMessage); return;}
-        start = System.nanoTime();
         try {
             String ergebnis = dict.search(args[1]);
             if (ergebnis.equals("null")) { System.out.println("Word doesnt exist!"); }
@@ -222,6 +261,7 @@ public class TUI {
                 |   i { Wort word }         (insert)|
                 |   r { Wort }              (remove)|
                 |   count / c   (size of Dictionary)|
+                |   d           (delete All Entries)|
                 |   help               (Display help|
                 |   exit             (Close process)|
                 -------------------------------------
@@ -242,71 +282,41 @@ public class TUI {
 
     private static String errorMessage = "ERROR! Wrong usage! Try \"help\" !";
 
+    private static long averageDeutsch = 0;
+    private static long averageEnglisch = 0;
+    private static long benchNumber = 0;
 
-    private static void benchmarks(String[] args) {
+
+
+    private static void benchmarks() {
         if (!checkDirExists()) { return; }
 
-        int number = 8000;
-        int counter = 0;
-        File sFile = null;
-        String line;
         long zeitDeutsch = 0;
         long zeitEnglisch = 0;
-
-        try {
-            if (args.length >= 2) {
-                number = Integer.parseInt(args[1]);
-            }
-        } catch (IllegalArgumentException e){
-            System.err.println(errorMessage);
-            return;
-        }
 
         List<String> deutscheWoerter = new LinkedList<>();
         List<String> englischeWoerter = new LinkedList<>();
 
-        JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File("../AIN3-ALDA/src/aufgabe1"));
-
-        int returnVal = fc.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            sFile = fc.getSelectedFile();
-        } else {
-            System.err.println("No file selected!");
-            return;
+        for (Dictionary.Entry<String, String> words : dict) {
+            deutscheWoerter.add(words.getKey());
+            englischeWoerter.add(words.getValue());
         }
 
-        FileReader in;
-
-        try {
-            in = new FileReader(sFile);
-
-            BufferedReader br = new BufferedReader(in);
-
-            while((line = br.readLine()) != null && counter < number ) {
-                String[] currentLine = line.split(" ");
-                dict.insert(currentLine[0], currentLine[1]);
-                deutscheWoerter.add(currentLine[0]);
-                englischeWoerter.add(currentLine[1]);
-
-                counter++;
-            }
+        long startD = 0;
+        long endD = 0;
+        long startE = 0;
+        long endE = 0;
 
 
-            br.close();
-
-        } catch (Exception e) {
-            System.err.println("Error while reading file!");
-        }
         System.out.printf("Gesteste Dictionary: %s\n-> Messung in Mikro Sekunden µs <-\n\n", dict.getClass().toString());
 
         ListIterator<String> itD = deutscheWoerter.listIterator();
         int c = 0;
         for (var words : deutscheWoerter) {
-            start = System.nanoTime();
+            startD = System.nanoTime();
             dict.search(itD.next());
-            end = System.nanoTime();
-            zeitDeutsch += (end-start)/THOUSAND;
+            endD = System.nanoTime();
+            zeitDeutsch += (endD-startD)/THOUSAND;
             c++;
         }
         System.out.printf("Dauer für %d erfolgreiche Einträge : %d µs\n", c, zeitDeutsch);
@@ -314,12 +324,17 @@ public class TUI {
         ListIterator<String> itE = englischeWoerter.listIterator();
         c = 0;
         for (var words : englischeWoerter) {
-            start = System.nanoTime();
+            startE = System.nanoTime();
             dict.search(itE.next());
-            end = System.nanoTime();
-            zeitEnglisch += (end-start)/THOUSAND;
+            endE = System.nanoTime();
+            zeitEnglisch += (endE-startE)/THOUSAND;
             c++;
         }
         System.out.printf("Dauer für %d nicht erfolgreiche Einträge : %d µs\n", c, zeitEnglisch);
+
+        averageDeutsch += zeitDeutsch;
+        averageEnglisch += zeitEnglisch;
+        benchNumber += 1;
+        System.out.printf("\nAverage from %d Runs:\nDeutsch: %d µs\nEnglisch: %d µs\n", benchNumber, (averageDeutsch/benchNumber), (averageEnglisch/benchNumber));
     }
 }
