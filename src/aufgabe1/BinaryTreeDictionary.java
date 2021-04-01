@@ -268,7 +268,11 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
      */
     @Override
     public String toString() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        for (Dictionary.Entry<K, V> e : this) {
+            sb.append(e.getKey() + ": " + e.getValue() + "\n");
+        }
+        return sb.toString();
     }
 
     /**

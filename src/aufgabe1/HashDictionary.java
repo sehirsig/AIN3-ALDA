@@ -171,7 +171,11 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
      */
     @Override
     public String toString() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        for (Dictionary.Entry<K, V> e : this) {
+            sb.append(e.getKey() + ": " + e.getValue() + "\n");
+        }
+        return sb.toString();
     }
 
     /**

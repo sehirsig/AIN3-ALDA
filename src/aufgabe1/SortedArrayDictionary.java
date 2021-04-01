@@ -132,7 +132,11 @@ public class SortedArrayDictionary<K extends Comparable<? super K> , V> implemen
      */
     @Override
     public String toString() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        for (Dictionary.Entry<K, V> e : this) {
+            sb.append(e.getKey() + ": " + e.getValue() + "\n");
+        }
+        return sb.toString();
     }
 
     /**
