@@ -118,7 +118,7 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
             tab[adr] = new LinkedList<Entry<K,V>>();
             tab[adr].add(new Entry<K, V>(key, value));
         }
-        ++size;
+        size++;
         return null;
     }
 
@@ -154,7 +154,6 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
                 return oldValue;
             }
         }
-
         return null;
     }
 
