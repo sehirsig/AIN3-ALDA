@@ -8,6 +8,10 @@ public class TUI {
 
     private static Dictionary<String, String> dict;
 
+    private static long start;
+    private static long end;
+    private static final long THOUSAND = 1000;
+
     public static void main(String[] args) throws Exception {
 
         System.out.println(welcomeMessage);
@@ -53,8 +57,12 @@ public class TUI {
             case "c":
                 count();
                 break;
+            case "benchmark":
+            case "b":
+                benchmarks(args);
+                break;
             default:
-                System.out.println(errorMessage);
+                System.err.println(errorMessage);
         }
 
     }
@@ -95,7 +103,7 @@ public class TUI {
                 number = Integer.parseInt(args[1]);
             }
         } catch (IllegalArgumentException e){
-            System.out.println(errorMessage);
+            System.err.println(errorMessage);
             return;
         }
 
@@ -112,22 +120,31 @@ public class TUI {
 
         FileReader in;
 
+
         try {
             in = new FileReader(sFile);
 
             BufferedReader br = new BufferedReader(in);
 
+            System.out.printf("Gesteste Dictionary: %s\n-> Messung in Mikro Sekunden µs <-\n\n", dict.getClass().toString());
+
             if (args.length >= 2) {
+                start = System.nanoTime();
                 while((line = br.readLine()) != null && counter < number ) {
                     String[] currentLine = line.split(" ");
                     dict.insert(currentLine[0], currentLine[1]);
                     counter++;
                 }
+                end = System.nanoTime();
+                System.out.printf("Dauer für %d Einträge : %d µs\n", dict.size(), (end-start)/THOUSAND);
             } else {
+                start = System.nanoTime();
                 while((line = br.readLine()) != null) {
                     String[] currentLine = line.split(" ");
                     dict.insert(currentLine[0], currentLine[1]);
                 }
+                end = System.nanoTime();
+                System.out.printf("Dauer für %d Einträge : %d µs\n", dict.size(), (end-start)/THOUSAND);
             }
             br.close();
 
@@ -144,7 +161,8 @@ public class TUI {
 
     private static void search(String[] args) {
         if (!checkDirExists()) { return; }
-        if (args.length < 2) { System.out.println(errorMessage); return;}
+        if (args.length < 2) { System.err.println(errorMessage); return;}
+        start = System.nanoTime();
         try {
             String ergebnis = dict.search(args[1]);
             if (ergebnis.equals("null")) { System.out.println("Word doesnt exist!"); }
@@ -157,7 +175,8 @@ public class TUI {
 
     private static void insert(String[] args) {
         if (!checkDirExists()) { return; }
-        if (args.length < 3) { System.out.println(errorMessage); return;}
+        if (args.length < 3) { System.err.println(errorMessage); return;}
+
         try {
             dict.insert(args[1], args[2]);
             System.out.printf("Added: %s : %s\n", args[1], args[2]);
@@ -169,7 +188,7 @@ public class TUI {
 
     private static void remove(String[] args) {
         if (!checkDirExists()) { return; }
-        if (args.length < 2) { System.out.println(errorMessage); return;}
+        if (args.length < 2) { System.err.println(errorMessage); return;}
         try {
             dict.remove(args[1]);
             System.out.printf("Removed: %s\n", args[1]);
@@ -224,4 +243,83 @@ public class TUI {
     private static String errorMessage = "ERROR! Wrong usage! Try \"help\" !";
 
 
+    private static void benchmarks(String[] args) {
+        if (!checkDirExists()) { return; }
+
+        int number = 8000;
+        int counter = 0;
+        File sFile = null;
+        String line;
+        long zeitDeutsch = 0;
+        long zeitEnglisch = 0;
+
+        try {
+            if (args.length >= 2) {
+                number = Integer.parseInt(args[1]);
+            }
+        } catch (IllegalArgumentException e){
+            System.err.println(errorMessage);
+            return;
+        }
+
+        List<String> deutscheWoerter = new LinkedList<>();
+        List<String> englischeWoerter = new LinkedList<>();
+
+        JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new File("../AIN3-ALDA/src/aufgabe1"));
+
+        int returnVal = fc.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            sFile = fc.getSelectedFile();
+        } else {
+            System.err.println("No file selected!");
+            return;
+        }
+
+        FileReader in;
+
+        try {
+            in = new FileReader(sFile);
+
+            BufferedReader br = new BufferedReader(in);
+
+            while((line = br.readLine()) != null && counter < number ) {
+                String[] currentLine = line.split(" ");
+                dict.insert(currentLine[0], currentLine[1]);
+                deutscheWoerter.add(currentLine[0]);
+                englischeWoerter.add(currentLine[1]);
+
+                counter++;
+            }
+
+
+            br.close();
+
+        } catch (Exception e) {
+            System.err.println("Error while reading file!");
+        }
+        System.out.printf("Gesteste Dictionary: %s\n-> Messung in Mikro Sekunden µs <-\n\n", dict.getClass().toString());
+
+        ListIterator<String> itD = deutscheWoerter.listIterator();
+        int c = 0;
+        for (var words : deutscheWoerter) {
+            start = System.nanoTime();
+            dict.search(itD.next());
+            end = System.nanoTime();
+            zeitDeutsch += (end-start)/THOUSAND;
+            c++;
+        }
+        System.out.printf("Dauer für %d erfolgreiche Einträge : %d µs\n", c, zeitDeutsch);
+
+        ListIterator<String> itE = englischeWoerter.listIterator();
+        c = 0;
+        for (var words : englischeWoerter) {
+            start = System.nanoTime();
+            dict.search(itE.next());
+            end = System.nanoTime();
+            zeitEnglisch += (end-start)/THOUSAND;
+            c++;
+        }
+        System.out.printf("Dauer für %d nicht erfolgreiche Einträge : %d µs\n", c, zeitEnglisch);
+    }
 }
