@@ -2,7 +2,6 @@ package aufgabe1;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
 public class HashDictionary<K, V> implements Dictionary<K, V> {
     /**
@@ -10,9 +9,9 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
      */
     private int size;
     private LinkedList<Entry<K, V>>[] tab;
-    private int DEF_CAPACITY = 31;
+    private final int DEF_CAPACITY = 31;
     private final int load_factor = 2;
-    private int load;
+    private final int load;
 
     /**
      * Konstruktor 1
