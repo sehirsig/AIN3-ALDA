@@ -11,7 +11,7 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
     private LinkedList<Entry<K, V>>[] tab;
     private final int DEF_CAPACITY = 31;
     private final int load_factor = 2;
-    private final int load;
+    private int load;
 
     /**
      * Konstruktor 1
@@ -62,6 +62,7 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
         }
 
         this.tab = newtab.tab;
+        this.load = newload;
 
     }
 
