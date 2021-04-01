@@ -49,10 +49,19 @@ public class TUI {
             case "help":
                 System.out.println(helpString);
                 break;
+            case "count":
+            case "c":
+                count();
+                break;
             default:
                 System.out.println(errorMessage);
         }
 
+    }
+
+    private static void count() {
+        if (!checkDirExists()) { return; }
+        System.out.printf("Number of Words: %d\n", dict.size());
     }
 
     private static void create(String[] args) {
@@ -60,13 +69,16 @@ public class TUI {
             String arg = args[1].toLowerCase();
             if (arg.equals("hashdictionary")){
                 dict = new HashDictionary<>(3);
+                System.out.println("HashDictionary created!");
                 return;
             } else if (arg.equals("binarytreedictionary")) {
                 dict = new BinaryTreeDictionary<>();
+                System.out.println("BinaryTreeDictionary created!");
                 return;
             }
         }
         dict = new SortedArrayDictionary<>();
+        System.out.println("SortedArrayDictionary created!");
     }
 
     private static void read(String[] args) throws Exception {
@@ -95,6 +107,7 @@ public class TUI {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             sFile = fc.getSelectedFile();
         } else {
+            System.err.println("No file selected!");
             return;
         }
 
@@ -190,6 +203,8 @@ public class TUI {
                 |   s                               |
                 |   i                               |
                 |   r                               |
+                |   count                           |
+                |   help                            |
                 |   exit                            |
                 -------------------------------------
                 
