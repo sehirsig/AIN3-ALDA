@@ -67,11 +67,11 @@ public class TUI {
     private static void create(String[] args) {
         if (args.length >= 2) {
             String arg = args[1].toLowerCase();
-            if (arg.equals("hashdictionary")){
+            if (arg.equals("hashdictionary") || arg.equals("hash") || arg.equals("h")){
                 dict = new HashDictionary<>(3);
                 System.out.println("HashDictionary created!");
                 return;
-            } else if (arg.equals("binarytreedictionary")) {
+            } else if (arg.equals("binarytreedictionary") || arg.equals("binary") || arg.equals("b")) {
                 dict = new BinaryTreeDictionary<>();
                 System.out.println("BinaryTreeDictionary created!");
                 return;
@@ -83,7 +83,6 @@ public class TUI {
 
     private static void read(String[] args) throws Exception {
         if (!checkDirExists()) { return; }
-        //if (args.length < 1) { System.out.println(errorMessage); return;}
 
 
         int number = 1;
@@ -197,15 +196,15 @@ public class TUI {
                 ------------------------------------
                 |            HELP TABLE             |
                 |-----------------------------------|
-                |   create                          |
-                |   read                            |
-                |   p                               |
-                |   s                               |
-                |   i                               |
-                |   r                               |
-                |   count                           |
-                |   help                            |
-                |   exit                            |
+                |   create { binary, hash, \"\" }     |
+                |   read { \"\", n (any number) }     |
+                |   p (prints the dictionary)       |
+                |   s { Wort (in german) }  (search)|
+                |   i { Wort word }         (insert)|
+                |   r { Wort }              (remove)|
+                |   count / c   (size of Dictionary)|
+                |   help               (Display help|
+                |   exit             (Close process)|
                 -------------------------------------
                 
                 """;
