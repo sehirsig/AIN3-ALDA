@@ -270,7 +270,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Dictionary.Entry<K, V> e : this) {
-            sb.append(e.getKey() + ": " + e.getValue() + "\n");
+            sb.append(e.getKey() + " : " + e.getValue() + "\n");
         }
         return sb.toString();
     }
