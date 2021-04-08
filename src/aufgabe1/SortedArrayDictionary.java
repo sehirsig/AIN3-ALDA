@@ -160,9 +160,7 @@ public class SortedArrayDictionary<K extends Comparable<? super K> , V> implemen
 
         public Entry<K, V> next() {
             if(this.hasNext()) {
-                int current = this.cursor;
-                this.cursor ++;
-                return data[current];
+                return data[cursor++];
             }
             throw new NoSuchElementException();
         }
