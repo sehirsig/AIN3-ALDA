@@ -96,6 +96,10 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
 
     @Override
     public V insert(K key, V value) {
+        if (check_load()) {
+            add_capacity();
+        }
+
         int adr = hash(key);
 
         if (search(key) != null) {
@@ -106,10 +110,6 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
                     return oldValue;
                 }
             }
-        }
-
-        if (check_load()) {
-            add_capacity();
         }
 
         if (tab[adr] != null) {
