@@ -40,7 +40,7 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
      * Hilfsmethoden
      */
     private boolean check_load() { // True if load is good, False if load is too much
-        return (this.load * this.load_factor < size) ? false : true;
+        return (this.load * this.load_factor < size) ? true : false;
     }
 
     private void add_capacity() {
@@ -108,7 +108,7 @@ public class HashDictionary<K, V> implements Dictionary<K, V> {
             }
         }
 
-        if (!check_load()) {
+        if (check_load()) {
             add_capacity();
         }
 
