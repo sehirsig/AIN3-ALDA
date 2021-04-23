@@ -61,6 +61,7 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 		}
 		if (containsEdge(v,w)) {
 			succ.get(v).put(w, weight);
+			pred.get(w).put(v, weight);
 			return false;
 		} else {
 			succ.get(v).put(w, weight);
@@ -193,6 +194,7 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 			
 		Set<Integer> s = g.getSuccessorVertexSet(2);
 		System.out.println(s);
-		//s.remove(5);	// Laufzeitfehler! Warum?
+		s.remove(5);	// Laufzeitfehler! Warum?
+		//Da unmodifiableCollection -> Nicht änderbar.
 	}
 }
