@@ -2,9 +2,7 @@
 // 22.02.2017
 package aufgabe2;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Klasse für Tiefensuche.
@@ -28,7 +26,30 @@ public class DepthFirstOrder<V> {
      */
     public DepthFirstOrder(DirectedGraph<V> g) {
         myGraph = g;
+        visitDF(myGraph);
         // ...
+
+    }
+
+    private void visitDF(DirectedGraph<V> g) {
+        Set<V> besucht = new TreeSet<>();
+        for (var vex : g.getVertexSet()) {
+            if (!besucht.contains(vex)) {
+                visitDF(vex, g, besucht);
+                numberOfDFTrees++;
+            }
+        }
+    }
+
+    private void visitDF(V v, DirectedGraph<V> g, Set<V> besucht) {
+        besucht.add(v);
+        preOrder.add(v);
+        for (var ex : g.getSuccessorVertexSet(v)) {
+            if (!besucht.contains(ex)) {
+                visitDF(ex, g, besucht);
+            }
+        }
+        postOrder.add(v);
     }
 
     /**
