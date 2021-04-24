@@ -194,7 +194,7 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 			
 		Set<Integer> s = g.getSuccessorVertexSet(2);
 		System.out.println(s);
-		s.remove(5);	// Laufzeitfehler! Warum?
+		//s.remove(5);	// Laufzeitfehler! Warum?
 		//Da unmodifiableCollection -> Nicht änderbar.
 	}
 }
