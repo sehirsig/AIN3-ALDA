@@ -5,10 +5,7 @@ package aufgabe2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Klasse für Bestimmung aller strengen Komponenten.
@@ -27,7 +24,8 @@ public class StrongComponents<V> {
     // Component 3: 4,
 
 	private final Map<Integer,Set<V>> comp = new TreeMap<>();
-	
+	private int zähler;
+
 	/**
 	 * Ermittelt alle strengen Komponenten mit
 	 * dem Kosaraju-Sharir Algorithmus.
@@ -35,6 +33,35 @@ public class StrongComponents<V> {
 	 */
 	public StrongComponents(DirectedGraph<V> g) {
 		// ...
+
+		//Aufgabe a)
+		DepthFirstOrder<V> p = new DepthFirstOrder<>(g);
+		List<V> pi = new LinkedList<>(p.postOrder());
+		Collections.reverse(pi);
+
+		//Aufgabe b)
+		DirectedGraph<V> gi = g.invert();
+
+		//Aufgabe c)
+		Set<V> besucht = new HashSet<>();
+		for (var v : pi) {
+			if (!besucht.contains(v)) {
+				comp.put(zähler, new TreeSet<>());
+				comp.get(zähler).add(v);
+				visitDF(v, gi, besucht);
+				zähler++;
+			}
+		}
+	}
+
+	void visitDF(V v, DirectedGraph<V> g, Set<V> besucht) {
+		besucht.add(v);
+		for(var w : g.getSuccessorVertexSet(v)) {
+			if (!besucht.contains(w)) {
+				comp.get(zähler).add(w);
+				visitDF(w, g, besucht);
+			}
+		}
 	}
 	
 	/**
@@ -47,7 +74,16 @@ public class StrongComponents<V> {
 
 	@Override
 	public String toString() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		StringBuilder sb = new StringBuilder();
+		for (var key : comp.entrySet()) {
+			sb.append("Component " + key.getKey() + ": ");
+			for (var val : key.getValue()) {
+				sb.append(val + ", ");
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
+		//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	
 	/**
