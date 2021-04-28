@@ -3,9 +3,7 @@
 
 package aufgabe2;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Klasse zur Erstellung einer topologischen Sortierung.
@@ -16,6 +14,8 @@ import java.util.List;
 public class TopologicalSort<V> {
     private List<V> ts = new LinkedList<>(); // topologisch sortierte Folge
 	// ...
+	int[] inDegree; //Anz. noch nicht besuchter Vorgänger
+	Queue<V> q;
 
 	/**
 	 * Führt eine topologische Sortierung für g durch.
@@ -23,8 +23,40 @@ public class TopologicalSort<V> {
 	 */
 	public TopologicalSort(DirectedGraph<V> g) {
         // ...
+		topSort(g);
     }
-    
+
+    List<V> topSort(DirectedGraph<V> g) {
+		Map<V, Integer> inDegree = new TreeMap<>();
+		Queue<V> q = new LinkedList<>();
+
+		for (var v : g.getVertexSet()) {
+			inDegree.put(v, g.getInDegree(v));
+			if (inDegree.get(v) == 0) {
+				q.add(v);
+			}
+		}
+
+		while (!q.isEmpty()) {
+			V v = q.remove();
+			ts.add(v);
+			for (var w : g.getSuccessorVertexSet(v)) {
+				inDegree.put(w, inDegree.get(w)-1);
+				if (inDegree.get(w) == 0) {
+					q.add(w);
+				}
+			}
+		}
+
+		if (ts.size() != g.getNumberOfVertexes()) {
+			//Null
+			return null;
+		} else {
+			return ts;
+		}
+	}
+
+
 	/**
 	 * Liefert eine nicht modifizierbare Liste (unmodifiable view) zurück,
 	 * die topologisch sortiert ist.
