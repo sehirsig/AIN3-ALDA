@@ -149,7 +149,7 @@ public class StrongComponents<V> {
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		test1();
+		test1(); //Graph Azyklisch, da ansonsten alles eine große Starke Komponente ist.
 		test2();
 	}
 }

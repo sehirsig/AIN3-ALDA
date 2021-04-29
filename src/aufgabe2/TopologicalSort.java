@@ -83,5 +83,31 @@ public class TopologicalSort<V> {
 		if (ts.topologicalSortedList() != null) {
 			System.out.println(ts.topologicalSortedList()); // [1, 2, 3, 4, 5, 6, 7]
 		}
+		anziehen();
+	}
+
+	public static void anziehen() {
+		DirectedGraph<String> g = new AdjacencyListDirectedGraph<>();
+		g.addEdge("Socken", "Schuhe");
+		g.addEdge("Schuhe", "Handschuhe");
+		g.addEdge("Unterhose", "Hose");
+		g.addEdge("Hose", "Schuhe");
+		g.addEdge("Hose", "Gürtel");
+		g.addEdge("Unterhemd", "Hemd");
+		g.addEdge("Hemd", "Pulli");
+		g.addEdge("Pulli", "Mantel");
+		g.addEdge("Gürtel", "Mantel");
+		g.addEdge("Mantel", "Schal");
+		g.addEdge("Schal", "Handschuhe");
+		g.addEdge("Mütze", "Handschuhe");
+		//g.addEdge("Schal", "Hose"); Hose nur mit Schal anziehen. Fehler [Mütze, Socken, Unterhemd, Unterhose, Hemd, Pulli]
+
+
+		System.out.println(g);
+		TopologicalSort<String> ts = new TopologicalSort<>(g);
+
+		if (ts.topologicalSortedList() != null) {
+			System.out.println(ts.topologicalSortedList()); // [1, 2, 3, 4, 5, 6, 7]
+		}
 	}
 }
