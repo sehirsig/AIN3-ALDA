@@ -23,7 +23,8 @@ public class TopologicalSort<V> {
 	 */
 	public TopologicalSort(DirectedGraph<V> g) {
         // ...
-		topSort(g);
+	    ts = topSort(g); // Nullpointer
+		//topSort(g);
     }
 
     List<V> topSort(DirectedGraph<V> g) {
@@ -50,7 +51,8 @@ public class TopologicalSort<V> {
 
 		if (ts.size() != g.getNumberOfVertexes()) {
 			//Null
-			return null;
+			List<V> nullts = new LinkedList<>();
+			return nullts;
 		} else {
 			return ts;
 		}
@@ -100,7 +102,7 @@ public class TopologicalSort<V> {
 		g.addEdge("Mantel", "Schal");
 		g.addEdge("Schal", "Handschuhe");
 		g.addEdge("Mütze", "Handschuhe");
-		//g.addEdge("Schal", "Hose"); Hose nur mit Schal anziehen. Fehler [Mütze, Socken, Unterhemd, Unterhose, Hemd, Pulli]
+		g.addEdge("Schal", "Hose"); //Hose nur mit Schal anziehen. Fehler [Mütze, Socken, Unterhemd, Unterhose, Hemd, Pulli]
 
 
 		System.out.println(g);

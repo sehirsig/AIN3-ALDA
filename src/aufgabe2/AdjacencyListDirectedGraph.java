@@ -33,10 +33,10 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 	 */
 
     // doppelte Map für die Nachfolgerknoten:
-    private final Map<V, Map<V, Double>> succ = new TreeMap<>(); 
+    private Map<V, Map<V, Double>> succ = new TreeMap<>();
     
     // doppelte Map für die Vorgängerknoten:
-    private final Map<V, Map<V, Double>> pred = new TreeMap<>(); 
+    private Map<V, Map<V, Double>> pred = new TreeMap<>();
 
     private int numberEdge = 0;
 
@@ -67,7 +67,7 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 			succ.get(v).put(w, weight);
 			pred.get(w).put(v, weight);
 			numberEdge++;
-			return false;
+			return true;
 		}
     }
 
@@ -129,10 +129,9 @@ public class AdjacencyListDirectedGraph<V> implements DirectedGraph<V> {
 	
 	@Override
     public DirectedGraph<V> invert() {
-		Map<V, Map<V, Double>> temp = new TreeMap<>();
-		temp.putAll(succ);
-		succ.putAll(pred);
-		pred.putAll(succ);
+		Map<V, Map<V, Double>> temp = succ; // Einfach Zeiger austausch besser
+		succ = pred;
+		pred = succ;
 		return this;
 	}
 
