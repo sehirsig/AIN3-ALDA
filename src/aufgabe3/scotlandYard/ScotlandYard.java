@@ -1,8 +1,8 @@
-package shortestPath;
+package aufgabe3.scotlandYard;
 
-import directedGraph.*;
+import aufgabe2.*;
 import java.io.FileNotFoundException;
-import sim.SYSimulation;
+import aufgabe3.SYSimulation.sim.SYSimulation;
 import java.awt.Color;
 import java.io.IOException;
 

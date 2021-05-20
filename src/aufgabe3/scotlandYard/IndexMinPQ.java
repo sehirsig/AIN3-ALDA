@@ -1,4 +1,4 @@
-package shortestPath;
+package aufgabe3.scotlandYard;
 
 import java.util.Arrays;
 import java.util.Comparator;

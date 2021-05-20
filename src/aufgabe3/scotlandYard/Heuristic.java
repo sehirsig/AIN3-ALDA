@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package shortestPath;
+package aufgabe3.scotlandYard;
 
 /**
  * @author Oliver Bittel

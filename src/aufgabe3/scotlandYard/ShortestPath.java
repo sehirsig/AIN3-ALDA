@@ -1,10 +1,10 @@
 // O. Bittel;
 // 01.04.2021
 
-package shortestPath;
+package aufgabe3.scotlandYard;
 
-import directedGraph.*;
-import sim.SYSimulation;
+import aufgabe2.DirectedGraph;
+import aufgabe3.SYSimulation.sim.SYSimulation;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;

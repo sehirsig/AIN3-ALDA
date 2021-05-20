@@ -1,6 +1,6 @@
-package shortestPath;
+package aufgabe3.scotlandYard;
 
-import directedGraph.*;
+import aufgabe2.*;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -40,7 +40,7 @@ public class ExampleGraph {
 	private static DirectedGraph<Integer> g = new AdjacencyListDirectedGraph<>();
 	
 	// Heuristik:
-	private static Heuristic<Integer> heuristic = (v,w) -> dist(v,w);
+	private static Heuristic<Integer> heuristic = (v, w) -> dist(v,w);
 	
 	private static double dist(int v, int w) {
 		Point vp = coords.get(v);
