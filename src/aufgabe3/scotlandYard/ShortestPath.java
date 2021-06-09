@@ -5,9 +5,8 @@ package aufgabe3.scotlandYard;
 
 import aufgabe2.DirectedGraph;
 import aufgabe3.SYSimulation.sim.SYSimulation;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
 
 // ...
 
@@ -24,6 +23,11 @@ public class ShortestPath<V> {
 	Map<V,Double> dist; 		// Distanz für jeden Knoten
 	Map<V,V> pred; 				// Vorgänger für jeden Knoten
 	IndexMinPQ<V,Double> cand; 	// Kandidaten als PriorityQueue PQ
+	DirectedGraph<V> graph;
+	Heuristic<V> h;
+	V start;
+	V goal;
+	double INFINITE_DOUBLE = Double.MAX_VALUE;
 	// ...
 
 	/**
@@ -40,6 +44,8 @@ public class ShortestPath<V> {
 		dist = new HashMap<>();
 		pred = new HashMap<>();
 		cand = new IndexMinPQ<>();
+		this.h = h;
+		graph = g;
 		// ...
 	}
 
@@ -69,6 +75,60 @@ public class ShortestPath<V> {
 	 */
 	public void searchShortestPath(V s, V g) {
 		// ...
+		shortestPath(s, g, graph, dist, pred);
+	}
+
+	boolean shortestPath(V s, V z, DirectedGraph<V> g, Map<V, Double> dist, Map<V, V> pred) {
+		cand.clear();
+		LinkedList<V> kandlist = new LinkedList<>();
+		start = s;
+		goal = z;
+		for (var v : g.getVertexSet()) {
+			dist.put(v, INFINITE_DOUBLE);
+			pred.put(v, null);
+		}
+
+		dist.put(s, 0.0);
+		kandlist.add(s);
+
+		while (!kandlist.isEmpty()) {
+			V minV = s;
+			double minDist = INFINITE_DOUBLE;
+
+			for (var v: kandlist) {
+				if (h == null) {
+					if (dist.get(v) < minDist) {
+						minDist = dist.get(v);
+						minV = v;
+					}
+				} else {
+					if ((dist.get(v) + h.estimatedCost(v, z)) < minDist) {
+						minDist = dist.get(v) + h.estimatedCost(v, z);
+						minV = v;
+					}
+					if (v.equals(z)) {
+						cand.add(v,dist.get(v));
+						return true;
+					}
+				}
+			}
+
+			kandlist.remove(minV);
+			V v = minV;
+
+			cand.add(minV, dist.get(minV));
+
+			for (V w : g.getSuccessorVertexSet(v)) {
+				if (dist.get(w) == INFINITE_DOUBLE) {
+					kandlist.add(w);
+				}
+				if (dist.get(v) + g.getWeight(v, w) < dist.get(w)) {
+					pred.put(w, v);
+					dist.put(w, dist.get(v) + g.getWeight(v, w));
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -79,7 +139,15 @@ public class ShortestPath<V> {
 	 */
 	public List<V> getShortestPath() {
 		// ...
-		return null;
+		LinkedList<V> shortestPath = new LinkedList<>();
+		V z = pred.get(goal);
+		shortestPath.add(goal);
+		while (z != start) {
+			shortestPath.add(z);
+			z = pred.get(z);
+		}shortestPath.add(start);
+		Collections.reverse(shortestPath);
+		return shortestPath;
 	}
 
 	/**
@@ -90,7 +158,7 @@ public class ShortestPath<V> {
 	 */
 	public double getDistance() {
 		// ...
-		return 0.0;
+		return dist.get(goal);
 	}
 
 }
