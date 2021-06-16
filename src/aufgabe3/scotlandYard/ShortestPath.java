@@ -17,9 +17,9 @@ import java.util.*;
  * @param <V> Knotentyp.
  */
 public class ShortestPath<V> {
-	
+
 	SYSimulation sim = null;
-	
+
 	Map<V,Double> dist; 		// Distanz für jeden Knoten
 	Map<V,V> pred; 				// Vorgänger für jeden Knoten
 	IndexMinPQ<V,Double> cand; 	// Kandidaten als PriorityQueue PQ
@@ -31,10 +31,10 @@ public class ShortestPath<V> {
 	// ...
 
 	/**
-	 * Konstruiert ein Objekt, das im Graph g k&uuml;rzeste Wege 
+	 * Konstruiert ein Objekt, das im Graph g k&uuml;rzeste Wege
 	 * nach dem A*-Verfahren berechnen kann.
 	 * Die Heuristik h schätzt die Kosten zwischen zwei Knoten ab.
-	 * Wird h = null gewählt, dann ist das Verfahren identisch 
+	 * Wird h = null gewählt, dann ist das Verfahren identisch
 	 * mit dem Dijkstra-Verfahren.
 	 * @param g Gerichteter Graph
 	 * @param h Heuristik. Falls h == null, werden kürzeste Wege nach
@@ -50,7 +50,7 @@ public class ShortestPath<V> {
 	}
 
 	/**
-	 * Diese Methode sollte nur verwendet werden, 
+	 * Diese Methode sollte nur verwendet werden,
 	 * wenn kürzeste Wege in Scotland-Yard-Plan gesucht werden.
 	 * Es ist dann ein Objekt für die Scotland-Yard-Simulation zu übergeben.
 	 * <p>
@@ -101,20 +101,24 @@ public class ShortestPath<V> {
 						minDist = dist.get(v);
 						minV = v;
 					}
+
 				} else {
 					if ((dist.get(v) + h.estimatedCost(v, z)) < minDist) {
 						minDist = dist.get(v) + h.estimatedCost(v, z);
 						minV = v;
 					}
-					if (v.equals(z)) {
-						cand.add(v,dist.get(v));
-						return true;
-					}
+				}
+				if (v.equals(z)) {
+					cand.add(v,dist.get(v));
+					System.out.println("Besuche Knoten " + v + " mit d: " + dist.get(v));
+					return true;
 				}
 			}
 
 			kandlist.remove(minV);
 			V v = minV;
+
+			System.out.println("Besuche Knoten " + v + " mit d: " + dist.get(v));
 
 			cand.add(minV, dist.get(minV));
 
@@ -139,15 +143,20 @@ public class ShortestPath<V> {
 	 */
 	public List<V> getShortestPath() {
 		// ...
-		LinkedList<V> shortestPath = new LinkedList<>();
-		V z = pred.get(goal);
-		shortestPath.add(goal);
-		while (z != start) {
-			shortestPath.add(z);
-			z = pred.get(z);
-		}shortestPath.add(start);
-		Collections.reverse(shortestPath);
-		return shortestPath;
+		try {
+			LinkedList<V> shortestPath = new LinkedList<>();
+			V z = pred.get(goal);
+			shortestPath.add(goal);
+			while (z != start) {
+				shortestPath.add(z);
+				z = pred.get(z);
+			}
+			shortestPath.add(start);
+			Collections.reverse(shortestPath);
+			return shortestPath;
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 	/**
@@ -158,7 +167,11 @@ public class ShortestPath<V> {
 	 */
 	public double getDistance() {
 		// ...
-		return dist.get(goal);
+		try {
+			return dist.get(goal);
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 }
