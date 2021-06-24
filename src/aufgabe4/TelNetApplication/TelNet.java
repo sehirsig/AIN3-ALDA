@@ -148,7 +148,10 @@ public class TelNet {
 
     @Override
     public String toString() {
-        return null;
+        StringBuilder sb = new StringBuilder("");
+        for (var s : minSpanTree)
+            sb.append(s.toString() + "\n");
+        return sb.toString();
     }
 
     public static void main(String[] args) {
@@ -169,7 +172,7 @@ public class TelNet {
         System.out.println("Gesamte Kosten: " + newTN.getOptTelNetKosten());
         System.out.println("TelNet Size is: " + newTN.size());
 
-        newTN.drawOptTelNetSmall(7,7);
+        //newTN.drawOptTelNetSmall(7,7);
 
         System.out.println("Baum 2");
         int max = 1000;
@@ -180,7 +183,7 @@ public class TelNet {
         System.out.println("Gibt es einen einzelnen Baum nach dem computen: " + newTN2.computeOptTelNet());
         System.out.println("Gesamte Kosten: " + newTN2.getOptTelNetKosten());
         System.out.println("TelNet Size is: " + newTN2.size());
-        //newTN2.drawOptTelNetBIG(max, max);
+        newTN2.drawOptTelNetBIG(max, max);
 
     }
 }
