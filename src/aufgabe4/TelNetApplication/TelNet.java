@@ -149,7 +149,7 @@ public class TelNet {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("");
-        for (var s : minSpanTree)
+        for (var s : getOptTelNet())
             sb.append(s.toString() + "\n");
         return sb.toString();
     }
